@@ -1,400 +1,393 @@
 #include<iostream>
 #include<windows.h>
 #include<conio.h>
-#include<math.h>
-#include<iomanip>
 using namespace std;
 
-void gotoRowCol(int rpos, int cpos)
-{
-    COORD scrn{};
-    HANDLE hOuput = GetStdHandle(STD_OUTPUT_HANDLE);
-    scrn.X = cpos;
-    scrn.Y = rpos;
-    SetConsoleCursorPosition(hOuput, scrn);
-}
-void color(int k)
-{
+void color(int k) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, k);
 }
-void hideConsoleCursor()
-{
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_CURSOR_INFO cursorInfo;
-    GetConsoleCursorInfo(hConsole, &cursorInfo);
-    cursorInfo.bVisible = false;
-    SetConsoleCursorInfo(hConsole, &cursorInfo);
-}
-void line(int r1, int c1, int r2, int c2, char sym, int rows = 120, int cols = 240)
-{
-    for (float i = 0; i <= 1; i += 0.01)
-    {
-        int X = ceil(c1 * (1 - i)) + (c2 * (i));
-        int Y = ceil(r1 * (1 - i)) + (r2 * (i));
-        if (r1 == r2)
-            Y = r1;
-        if (c1 == c2)
-            X = c1;
-        gotoRowCol(Y, X);
-        cout << sym;
-    }
-}
-void dibba(int r, int c, int d, int rows, int cols)
-{
-    line(r, c, r + d, c, -37, rows, cols);
-    line(r + d, c, r + d, c + d, -37, rows, cols);
-    line(r + d, c + d, r, c + d, -37, rows, cols);
-    line(r, c + d, r, c, -37, rows, cols);
-}
-void display(int rows, int cols, int length)
-{
-    line(rows, cols, rows, cols + length, -37);
-    line(rows, cols + length, rows + length / 2, cols + length, -37);
-    line(rows + length / 2, cols + length, rows + length / 2, cols, -37);
-    line(rows + length / 2, cols, rows, cols, -37);
-}
-void printgrid(int distance, int rows, int cols)
-{
-    for (int r = 0; r < distance * 10; r += distance)
-    {
-        for (int c = 0; c < distance * 10; c += distance)
-        {
-            dibba(r, c, distance, rows, cols);
-        }
-    }
-}
-void printnumbers(int distance)
-{
-    color(14);
-    int num = 1;
-    int eo = 1;
-    for (int r = distance * 10; r >= distance / 2; r -= distance, eo++)
-    {
-        if (eo % 2 == 0)
-        {
-            for (int c = distance * 10; c >= distance / 2; c -= distance)
-            {
-                gotoRowCol(r - distance / 2, c - distance / 2);
-                cout << setw(2) << num++;
-            }
-        }
-        else
-        {
-            for (int c = distance / 2; c <= distance * 10; c += distance)
-            {
-                gotoRowCol(r - distance / 2, c);
-                cout << setw(2) << num++;
-            }
-        }
-    }
 
+void displayCriteria() {
+    // Main heading color
+    color(14); // Light Yellow
+    cout << endl << "POINTS BREAKDOWN" << endl << endl;
+    color(14); // Light Yellow for Length section heading
+    cout << "Length:\n";
+
+    color(15); // White for text
     color(15);
-}
-void diceroll(int& die, int& move, int r, int c)
-{
-    int nofsix = 0;
-    move = 0;
-    while (true)
-    {
-        die = rand();
-        die = die % 6 + 1;
-        move += die;
-        if (die != 6)
-        {
-            gotoRowCol(r, c);
-            cout << die;
-            return;
-        }
-        if (die == 6)
-        {
-            nofsix++;
-        }
-        if (nofsix == 3)
-        {
-            move = 0;
-            gotoRowCol(r, c);
-            cout << "X";
-            return;
-        }
-        gotoRowCol(r, c);
-        cout << die;
-    }
-}
-void intro(int rows, int cols, char p1name[], char p2name[])
-{
-    color(11);
-    gotoRowCol(rows / 2, cols / 2 - 20);
-    cout << "WELCOME TO SNAKES AND LADDERS GAME MADE BY AMMAR ANAS";
-    Sleep(5000);
-    system("cls");
-    gotoRowCol(rows / 2, cols / 2 - 35);
-    cout << "RUN THIS GAME IN A WINDOW LAYOUT OF 125 ROWS/HEIGHT AND 230 COLUMNS/WIDTH FOR THE BEST EXPERIENCE";
-    Sleep(5000);
-    system("cls");
-    gotoRowCol(rows / 2, cols / 2 - 25);
-    cout << "WITH THAT ASIDE PLEASE HAVE FUN AND ENJOY YOURSELF!!! THANK YOU FOR PLAYING MY GAME <3";
-    Sleep(5000);
-    system("cls");
+    cout << "  - 8-12 characters: ";
+    color(10); cout << "+ 2 "; color(15); cout << "points\n"; // Light Green for +2 points
     color(15);
-    gotoRowCol(rows / 2, cols / 2 - 20);
-    cout << "Enter player 1 name: ";
-    int size = 0;
-    while (true)
-    {
-        p1name[size++] = _getche();
-        if (p1name[size - 1] == 13)
-            break;
-    }
-    p1name[size] = '\0';
+    cout << "  - 13-20 characters: ";
+    color(10); cout << "+ 4 "; color(15); cout << "points\n"; // Light Green for +4 points
+    color(15);
+    cout << "  - 21-30 characters: ";
+    color(10); cout << "+ 6 "; color(15); cout << "points\n\n"; // Light Green for +6 points
+
+    // Character Diversity Section
+    color(14); // Light Yellow for Character Diversity section heading
+    cout << "Character Diversity:\n";
+
+    // Lowercase letters
+    color(9); // Light Blue for subheading
+    cout << "  - Lowercase letters:\n";
+    color(15); cout << "      1-3: "; color(10); cout << "+1 "; color(15); cout << "point\n"; // Light Green for +1 point
+    color(15); cout << "      4 or more: "; color(10); cout << "+2 "; color(15); cout << "points\n"; // Light Green for +2 points
+
+    // Uppercase letters
+    color(11); // Light Aqua for subheading
+    cout << "  - Uppercase letters:\n";
+    color(15); cout << "      1-3: "; color(10); cout << "+1 "; color(15); cout << "point\n"; // Light Green for +1 point
+    color(15); cout << "      4 or more: "; color(10); cout << "+2 "; color(15); cout << "points\n"; // Light Green for +2 points
+
+    // Digits
+    color(6); // Light Purple for subheading
+    cout << "  - Digits:\n";
+    color(15); cout << "      1-2: "; color(10); cout << "+1 "; color(15); cout << "point\n"; // Light Green for +1 point
+    color(15); cout << "      3-5: "; color(10); cout << "+2 "; color(15); cout << "points\n"; // Light Green for +2 points
+    color(15); cout << "      6 or more: "; color(10); cout << "+3 "; color(15); cout << "points\n"; // Light Green for +3 points
+
+    // Special characters
+    color(13); // Light Blue for subheading
+    cout << "  - Special characters:\n";
+    color(15); cout << "      1-3: "; color(10); cout << "+1 "; color(15); cout << "point\n"; // Light Green for +1 point
+    color(15); cout << "      4-6: "; color(10); cout << "+2 "; color(15); cout << "points\n"; // Light Green for +2 points
+    color(15); cout << "      7 or more: "; color(10); cout << "+3 "; color(15); cout << "points\n\n"; // Light Green for +3 points
+
+    // Penalties Section
+    color(14); // Light Yellow for Penalties section heading
+    cout << "Penalties:\n";
+
+    // Repeated characters
+    color(9); // Light Purple for subheading
+    cout << "  - Repeated characters:\n";
+    color(15); cout << "      1-2 repeats: "; color(12); cout << "-1 "; color(15); cout << "point\n"; // Light Green for -1 point
+    color(15); cout << "      3-4 repeats: "; color(12); cout << "-2 "; color(15); cout << "points\n"; // Light Green for -2 points
+    color(15); cout << "      5 or more repeats: "; color(12); cout << "-3 "; color(15); cout << "points\n"; // Light Green for -3 points
+
+    // Consecutive sequences
+    color(11); // Light Aqua for subheading
+    cout << "  - Consecutive sequences:\n";
+    color(15); cout << "      1 sequence of 3 characters: "; color(12); cout << "-1 "; color(15); cout << "point\n"; // Light Green for -1 point
+    color(15); cout << "      2 or more sequences: "; color(12); cout << "-2 "; color(15); cout << "points\n\n"; // Light Green for -2 points
+
+    // Bonus Section
+    color(14); // Light Yellow for Bonus section heading
+    cout << "Bonus:\n";
+
+    color(15); // Light Blue for subheading
+    cout << "  - 3 character groups: "; color(10); cout << "+2 "; color(15); cout << "points\n"; // Light Green for +2 points
+    color(15); // Light Blue for subheading
+    cout << "  - 4 character groups: "; color(10); cout << "+4 "; color(15); cout << "points\n\n"; // Light Green for +4 points
+
+    // Password Strength Based on Points
+    color(14); // Light Yellow for Strength Based on Points section heading
+    cout << "\nPassword Strength Based on Points:\n";
+    color(15); // White for text
+    cout << "0 to 4 points: "; color(4); cout << "Very Weak\n"; // Light Purple for Very Weak
+    color(15); cout << "5 to 9 points: "; color(12); cout << "Weak\n"; // Light Purple for Weak
+    color(15); cout << "10 to 14 points: "; color(2); cout << "Moderate\n"; // Light Aqua for Moderate
+    color(15); cout << "15 to 19 points: "; color(2); cout << "Strong\n"; // Light Green for Strong
+    color(15); cout << "20 to 24 points: "; color(10); cout << "Very Strong\n"; // Light Green for Very Strong
+    color(15); cout << "25+ points: "; color(11); cout << "Excellent\n"; // Light Blue for Excellent
+    color(15); // Reset to white after finishing the color coding
+}
+
+void menu(bool showDetails) {
     system("cls");
-    gotoRowCol(rows / 2, cols / 2 - 20);
-    cout << "Enter player 2 name: ";
-    size = 0;
-    while (true)
-    {
-        p2name[size++] = _getche();
-        if (p2name[size - 1] == 13)
-            break;
-    }
-    p2name[size] = '\0';
-    system("Cls");
+    color(14); // Yellow for title
+    cout << "PASSWORD STRENGTH CHECKER MADE BY AMMAR ANAS";
+    cout << endl << endl;
+    color(15); // White for text
+    cout << "Enter a password to check its strength.";
+    color(10); // Green for password limit
+    cout << "\nPassword can be max 30 characters.";
+    color(12); // Red for space warning
+    cout << "\nPassword cannot include any spaces." << endl << endl;
     color(15);
-}
-void printsnakes()
-{
-    char sym = -37;
-    color(4);
-    line(110, 50, 100, 30, -37);
-    line(65, 26, 90, 26, -37);
-    line(65, 100, 75, 90, -37);
-    line(54, 54, 93, 65, -37);
-    line(44, 54, 65, 40, -37);
-    line(5, 100, 27, 115, -37);
-    line(15, 88, 55, 88, -37);
-    line(5, 15, 80, 63, -37);
-    color(15);
-}
-void printladders()
-{
+    cout << "Press '";
     color(10);
-    line(110, 63, 100, 53, -37);
-    line(110, 100, 75, 115, -37);
-    line(100, 20, 80, 30, -37);
-    line(90, 5, 30, 15, -37);
-    line(90, 90, 20, 40, -37);
-    line(50, 110, 40, 75, -37);
-    line(27, 100, 5, 87, -37);
-}
-void p1grid(int pos, int sym, int distance)
-{
-    int row = (pos - 1) / 10;
-    int col = (pos - 1) % 10;
-    if (row % 2 == 1) {
-        col = 9 - col;
-    }
-    int screenRow = ((10 - row) * distance - distance / 2) - 5;
-    int screenCol = (col * distance + distance / 2) - 5;
-    color(2);
-    gotoRowCol(screenRow, screenCol);
-    cout << (char)sym;
-    gotoRowCol(screenRow + 1, screenCol);
-    cout << (char)sym;
-    gotoRowCol(screenRow + 1, screenCol + 1);
-    cout << (char)sym;
-    gotoRowCol(screenRow, screenCol + 1);
-    cout << (char)sym;
-    gotoRowCol(screenRow + 2, screenCol);
-    cout << (char)sym;
-    gotoRowCol(screenRow + 2, screenCol + 1);
-    cout << (char)sym;
-    gotoRowCol(screenRow + 1, screenCol + 2);
-    cout << (char)sym;
-    gotoRowCol(screenRow, screenCol + 2);
-    cout << (char)sym;
-    gotoRowCol(screenRow + 2, screenCol + 2);
-    cout << (char)sym;
+    cout << "D";
     color(15);
-}
-void p2grid(int pos, int sym, int distance)
-{
-    int row = (pos - 1) / 10;
-    int col = (pos - 1) % 10;
-    if (row % 2 == 1) {
-        col = 9 - col;
+    cout << "' to toggle point breakdown.\n";
+
+    if (showDetails) {
+        displayCriteria();
     }
-    int screenRow = ((10 - row) * distance - distance / 2) + 3;
-    int screenCol = (col * distance + distance / 2) - 5;
+
+    color(15); // White for default text
+    cout << "\nPress '";
+    color(10);
+    cout << "Enter";
+    color(15);
+    cout << "' to continue to password entry.\n";
+    color(15);
+    cout << "Press '";
+    color(12);
+    cout << "Q";
+    color(15);
+    cout << "' to exit.\n\n";
+}
+
+int calculatePasswordStrength(const char password[], int length, int& lengthPoints, int& lowercasePoints, int& uppercasePoints, int& digitPoints, int& specialPoints, int& repeatsPenalty, int& sequencePenalty, int& bonusPoints) {
+    int points = 0;
+
+    // Length Points
+    if (length >= 8 && length <= 12) {
+        lengthPoints = 2;
+        points += 2;
+    }
+    else if (length >= 13 && length <= 20) {
+        lengthPoints = 4;
+        points += 4;
+    }
+    else if (length >= 21) {
+        lengthPoints = 6;
+        points += 6;
+    }
+    else {
+        lengthPoints = 0;
+    }
+
+    // Character Diversity Points
+    int lowercase = 0, uppercase = 0, digits = 0, special = 0;
+    for (int i = 0; i < length; i++) {
+        if (islower(password[i])) lowercase++;
+        else if (isupper(password[i])) uppercase++;
+        else if (isdigit(password[i])) digits++;
+        else special++;
+    }
+
+    if (lowercase >= 1 && lowercase <= 3) {
+        lowercasePoints = 1;
+        points += 1;
+    }
+    else if (lowercase > 3) {
+        lowercasePoints = 2;
+        points += 2;
+    }
+    else {
+        lowercasePoints = 0;
+    }
+
+    if (uppercase >= 1 && uppercase <= 3) {
+        uppercasePoints = 1;
+        points += 1;
+    }
+    else if (uppercase > 3) {
+        uppercasePoints = 2;
+        points += 2;
+    }
+    else {
+        uppercasePoints = 0;
+    }
+
+    if (digits >= 1 && digits <= 2) {
+        digitPoints = 1;
+        points += 1;
+    }
+    else if (digits >= 3 && digits <= 5) {
+        digitPoints = 2;
+        points += 2;
+    }
+    else if (digits > 5) {
+        digitPoints = 3;
+        points += 3;
+    }
+    else {
+        digitPoints = 0;
+    }
+
+    if (special >= 1 && special <= 3) {
+        specialPoints = 1;
+        points += 1;
+    }
+    else if (special >= 4 && special <= 6) {
+        specialPoints = 2;
+        points += 2;
+    }
+    else if (special > 6) {
+        specialPoints = 3;
+        points += 3;
+    }
+    else {
+        specialPoints = 0;
+    }
+
+    // Repetition Penalty Points
+    int repeats = 0;
+    for (int i = 1; i < length; i++) {
+        if (password[i] == password[i - 1]) repeats++;
+    }
+    if (repeats >= 1 && repeats <= 2) {
+        repeatsPenalty = -1;
+        points -= 1;
+    }
+    else if (repeats >= 3 && repeats <= 4) {
+        repeatsPenalty = -2;
+        points -= 2;
+    }
+    else if (repeats > 4) {
+        repeatsPenalty = -3;
+        points -= 3;
+    }
+    else {
+        repeatsPenalty = 0;
+    }
+
+    // Sequence Penalty Points
+    int sequences = 0;
+    for (int i = 2; i < length; i++) {
+        if ((password[i] == password[i - 1] + 1) && (password[i - 1] == password[i - 2] + 1)) {
+            sequences++;
+        }
+    }
+    if (sequences == 1) {
+        sequencePenalty = -1;
+        points -= 1;
+    }
+    else if (sequences > 1) {
+        sequencePenalty = -2;
+        points -= 2;
+    }
+    else {
+        sequencePenalty = 0;
+    }
+
+    // Bonus Points for Mixed Character Groups
+    int groups = (lowercase > 0) + (uppercase > 0) + (digits > 0) + (special > 0);
+    if (groups == 3) {
+        bonusPoints = 2;
+        points += 2;
+    }
+    else if (groups == 4) {
+        bonusPoints = 4;
+        points += 4;
+    }
+    else {
+        bonusPoints = 0;
+    }
+
+    return points;
+}
+
+void displayStrength(int points, int lengthPoints, int lowercasePoints, int uppercasePoints, int digitPoints, int specialPoints, int repeatsPenalty, int sequencePenalty, int bonusPoints, const char password[31]) {
+    color(14);
+    cout << "\n\nPassword Strength: ";
+    if (points <= 0) {
+        color(4);  // Red for very weak 4 12 2 2 10 11
+        cout << "Very Weak";
+    }
+    else if (points <= 4) {
+        color(12);  // Red for weak
+        cout << "Weak";
+    }
+    else if (points <= 9) {
+        color(2);  // Yellow for moderate
+        cout << "Moderate";
+    }
+    else if (points <= 15) {
+        color(2);  // Green for strong
+        cout << "Strong";
+    }
+    else if (points <= 20) {
+        color(10);  // Blue for very strong
+        cout << "Very Strong";
+    }
+    else {
+        color(11);  // Cyan for excellent
+        cout << "Excellent";
+    }
+    color(15);  // Reset to white
+    cout << endl;
+    color(14);
+    cout << "\nPassword: ";
+    color(15);
+    cout << password;
+    // Display point breakdown
+    color(14);
+    cout << "\n\nPoint Breakdown:\n";
+    color(15);
+    cout << "\nLength Points: ";
+    color(10);
+    cout << lengthPoints << endl;
+    color(15);
+    cout << "Lowercase Points: ";
+    color(10);
+    cout << lowercasePoints << endl;
+    color(15);
+    cout << "Uppercase Points: ";
+    color(10);
+    cout << uppercasePoints << endl;
+    color(15);
+    cout << "Digit Points: ";
+    color(10);
+    cout << digitPoints << endl;
+    color(15);
+    cout << "Special Character Points: ";
+    color(10);
+    cout << specialPoints << endl;
+    color(15);
+    cout << "Repeats Penalty: ";
     color(13);
-    gotoRowCol(screenRow, screenCol);
-    cout << (char)sym;
-    gotoRowCol(screenRow + 1, screenCol);
-    cout << (char)sym;
-    gotoRowCol(screenRow + 1, screenCol + 1);
-    cout << (char)sym;
-    gotoRowCol(screenRow, screenCol + 1);
-    cout << (char)sym;
-    gotoRowCol(screenRow + 2, screenCol);
-    cout << (char)sym;
-    gotoRowCol(screenRow + 2, screenCol + 1);
-    cout << (char)sym;
-    gotoRowCol(screenRow + 1, screenCol + 2);
-    cout << (char)sym;
-    gotoRowCol(screenRow, screenCol + 2);
-    cout << (char)sym;
-    gotoRowCol(screenRow + 2, screenCol + 2);
-    cout << (char)sym;
+    cout << repeatsPenalty << endl;
+    color(15);
+    cout << "Sequence Penalty: ";
+    color(13);
+    cout << sequencePenalty << endl;
+    color(15);
+    cout << "Bonus Points: ";
+    color(12);
+    cout << bonusPoints << endl;
+    color(15);
+    cout << "Total Points: ";
+    color(10);
+    cout << points << endl;
     color(15);
 }
-void sal(int snakes[], int ladders[])
-{
-    snakes[10] = 5;
-    snakes[43] = 23;
-    snakes[56] = 26;
-    snakes[49] = 33;
-    snakes[65] = 44;
-    snakes[99] = 35;
-    snakes[88] = 53;
-    snakes[92] = 71;
 
-    ladders[6] = 16;
-    ladders[9] = 31;
-    ladders[19] = 38;
-    ladders[28] = 84;
-    ladders[21] = 79;
-    ladders[51] = 67;
-    ladders[72] = 93;
-}
-void check(int snakes[], int ladders[], int& position) {
-    if (snakes[position] != 0) {
-        position = snakes[position];
+int main() {
+    bool showDetails = false;
+
+    while (true) {
+        menu(showDetails);
+        char ch = _getch();
+        if (ch == 13) { // Enter key
+            system("cls");
+            cout << "Enter your Password: ";
+            char password[31];
+            int passwordsize = 0;
+            while (true) {
+                ch = _getch();
+                if (ch == 13) break;
+                if (ch == 32) continue;
+                if (ch == 8 && passwordsize > 0) {
+                    passwordsize--;
+                    cout << "\b \b";
+                    continue;
+                }
+                if (passwordsize < 30) {
+                    password[passwordsize++] = ch;
+                    color(8);
+                    cout << '*';
+                    color(15);
+                }
+            }
+            password[passwordsize] = '\0';
+
+            int lengthPoints = 0, lowercasePoints = 0, uppercasePoints = 0, digitPoints = 0, specialPoints = 0, repeatsPenalty = 0, sequencePenalty = 0, bonusPoints = 0;
+            int points = calculatePasswordStrength(password, passwordsize, lengthPoints, lowercasePoints, uppercasePoints, digitPoints, specialPoints, repeatsPenalty, sequencePenalty, bonusPoints);
+            displayStrength(points, lengthPoints, lowercasePoints, uppercasePoints, digitPoints, specialPoints, repeatsPenalty, sequencePenalty, bonusPoints, password);
+            _getch();
+        }
+        else if (ch == 'D' || ch == 'd') {
+            showDetails = !showDetails; // Toggle point breakdown display
+        }
+        else if (ch == 'Q' || ch == 'q') {
+            break; // Exit the program
+        }
     }
-    else if (ladders[position] != 0) {
-        position = ladders[position];
-    }
-}
-void main()
-{
-    hideConsoleCursor();
-    srand(time(0));
-    int rows = 120, cols = 220, die, move;
-    int posp1 = 0, posp2 = 0;
-    char p1name[15], p2name[15];
-    int snakes[101] = { 0 };
-    int ladders[101] = { 0 };
-    sal(snakes, ladders);
-    intro(rows, cols, p1name, p2name);
-    printgrid(rows / 10, rows, cols);
-    printnumbers(rows / 10);
-    dibba(rows * 3 / 4 - 5, cols * 7 / 8 - 5, 10, rows, cols);
-    display(rows / 4, cols * 3 / 4, 40);
-    printsnakes();
-    printladders();
-    while ((posp1 != 100) && (posp2 != 100))
-    {
-        gotoRowCol(rows / 4 + 10, cols * 3 / 4 + 12);
-        cout << string(25, ' ');
-        gotoRowCol(rows / 4 + 12, cols * 3 / 4 + 12);
-        cout << string(25, ' ');
-        gotoRowCol(rows / 4 + 14, cols * 3 / 4 + 12);
-        cout << string(25, ' ');
-
-        color(15);
-        gotoRowCol(rows / 4 + 10, cols * 3 / 4 + 12);
-        cout << "Player "; color(10); cout << p1name; color(15);
-        gotoRowCol(rows / 4 + 12, cols * 3 / 4 + 12);
-        cout << "PRESS SPACE TO ROLL DICE";
-        char key;
-        while (true)
-        {
-            key = _getch();
-            if (key == 32)
-                break;
-        }
-
-        gotoRowCol(rows / 4 + 14, cols * 3 / 4 + 12);
-        cout << "          ";
-        diceroll(die, move, rows * 3 / 4, cols * 7 / 8);
-        gotoRowCol(rows / 4 + 14, cols * 3 / 4 + 12);
-        if (move == 0)
-        {
-            cout << "Null";
-        }
-        else
-        {
-            cout << "Move: " << setw(2) << move;
-            p1grid(posp1, ' ', rows / 10);
-            printsnakes();
-            printladders();
-            posp1 += move;
-            if (posp1 > 100)
-                posp1 = 100;
-            check(snakes, ladders, posp1);
-            p1grid(posp1, -37, rows / 10);
-
-        }
-        if (posp1 == 100)
-            break;
-        _getch();
-
-        gotoRowCol(rows / 4 + 10, cols * 3 / 4 + 12);
-        cout << string(25, ' ');
-        gotoRowCol(rows / 4 + 12, cols * 3 / 4 + 12);
-        cout << string(25, ' ');
-        gotoRowCol(rows / 4 + 14, cols * 3 / 4 + 12);
-        cout << string(25, ' ');
-
-        gotoRowCol(rows / 4 + 10, cols * 3 / 4 + 12);
-        cout << "Player "; color(13); cout << p2name; color(15);
-        gotoRowCol(rows / 4 + 12, cols * 3 / 4 + 12);
-        cout << "PRESS SPACE TO ROLL DICE";
-        while (true)
-        {
-            key = _getch();
-            if (key == 32)
-                break;
-        }
-
-        gotoRowCol(rows / 4 + 14, cols * 3 / 4 + 12);
-        cout << "          ";
-        diceroll(die, move, rows * 3 / 4, cols * 7 / 8);
-        gotoRowCol(rows / 4 + 14, cols * 3 / 4 + 12);
-        if (move == 0)
-        {
-            cout << "Null";
-        }
-        else
-        {
-            cout << "Move: " << setw(2) << move;
-            p2grid(posp2, ' ', rows / 10);
-            printsnakes();
-            printladders();
-            posp2 += move;
-            if (posp2 > 100)
-                posp2 = 100;
-            check(snakes, ladders, posp2);
-            p2grid(posp2, -37, rows / 10);
-        }
-        _getch();
-    }
-    _getch();
-    system("cls");
-    gotoRowCol(125 / 2, 235 / 2 - 10);
-    if (posp1 == 100)
-    {
-        color(10);
-        cout << p1name;
-    }
-    if (posp2 == 100)
-    {
-        color(13);
-        cout << p2name;
-    }
-    gotoRowCol(125 / 2 + 2, 235 / 2 - 5);
-    color(15);
-    cout << "WON!!";
-    Sleep(1000);
-    _getch();
-    return;
-
+    return 0;
 }
