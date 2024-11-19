@@ -1,0 +1,14 @@
+Date is in dd/mm/yyyy format.
+Anything written after  "//" is a comment
+
+___________________________________________________________________________________________________________
+
+06/10/2024: Created our group and decided our topic // PASSWORD STRENGTH CHECKER
+28/10/2024: Had group meeting and discussion
+02/11/2024: Created First Version of Cpp file
+10/11/2024: Created Github repository
+14/11/2024: Created Second Version of Cpp file
+15/11/2024: Tested the Cpp file
+19/11/2024: Updated the repository added Cpp flie
+20/11/2024: Remade Cpp file
+
