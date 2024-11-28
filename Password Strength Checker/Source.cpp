@@ -135,19 +135,23 @@ int calculatePasswordStrength(const char password[], int length, int& lengthPoin
     int points = 0;
 
     // Length Points
-    if (length >= 8 && length <= 12) {
+    if (length >= 8 && length <= 12)
+    {
         lengthPoints = 2;
         points += 2;
     }
-    else if (length >= 13 && length <= 20) {
+    else if (length >= 13 && length <= 20) 
+    {
         lengthPoints = 4;
         points += 4;
     }
-    else if (length >= 21) {
+    else if (length >= 21) 
+    {
         lengthPoints = 6;
         points += 6;
     }
-    else {
+    else 
+    {
         lengthPoints = 0;
     }
 
